@@ -2,10 +2,10 @@
  * @file pxt-eu-rate/main.ts
  * @brief EuRate microbit motors and sensors makecode library.
  *
- * @copyright	[EuRate](http://www.dfrobot.com), 2023
+ * @copyright	[EuRate](https://github.com/SimoneDavi55/pxt-eu-rate/blob/master/LICENSE), 2023
  * @copyright	MIT License
  *
- * @author [GitHub](1035868977@qq.com)
+ * @author [GitHub](https://github.com/SimoneDavi55)
  * @version  V0.0.1
  */
 /**
