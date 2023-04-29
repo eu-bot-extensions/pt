@@ -613,7 +613,7 @@ namespace eurate {
     * @param unit desired conversion unit
     * @param maxCmDistance maximum distance in centimeters (default is 500)
     */
-    //% blockId=sonar_ping block="ping trig %trig|echo %echo|unit %unit"
+    //% blockId=us_sensor block="US Sensor trig %trig|echo %echo|unit %unit"
     export function ping(trig: DigitalPin, echo: DigitalPin, unit: PingUnit, maxCmDistance = 500): number {
         // send pulse
         pins.setPull(trig, PinPullMode.PullNone);
@@ -666,13 +666,20 @@ namespace eurate {
     * @param duration duration in microseconds
     */
     //% blockId=motor_RobotMove block="Robot Move |speed %speed|direction %Dir|duration %duration"
-    export function Move(speed: number, direction: TwoDDir, duration: number): void {
+    export function Move(speed: number, direction: TwoDDir, duration: number, maxVelocity = 255, minVelocity = 1): void {
         motorStopAll();
+        if (speed<minVelocity) {
+            speed = minVelocity;
+        } else if (speed>maxVelocity) {
+            speed = maxVelocity;
+        }
         var d;
-        if (direction === TwoDDir.FW)
+        if (direction === TwoDDir.FW) {
             d = Dir.CW;
-        else (direction === TwoDDir.BW)
+        } else if (direction === TwoDDir.BW) {
             d = Dir.CCW;
+        }
+
         MotorRun(1, d, speed); //Right Back
         MotorRun(2, d, speed); //Left Back
         MotorRun(3, d, speed); // Right Front

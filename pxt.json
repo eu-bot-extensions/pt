@@ -1,11 +1,21 @@
 {
     "name": "pxt-eu-rate",
-    "version": "0.0.1",
-    "description": "",
+    "version": "0.0.3",
+    "description": "MakeCode extension",
+    "license": "MIT",
     "dependencies": {
         "core": "*",
         "radio": "*",
-        "microphone": "*"
+        "microphone": "*",
+        "accelerometer": "*",
+        "thermometer": "*",
+        "buttons": "*",
+        "lightsensor": "*",
+        "music": "*",
+        "light": "*",
+        "switch": "*",
+        "touch": "*",
+        "infrared": "*"
     },
     "files": [
         "main.ts",
