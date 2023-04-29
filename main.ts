@@ -673,7 +673,7 @@ namespace eurate {
         } else if (speed>maxVelocity) {
             speed = maxVelocity;
         }
-        var d;
+        let d;
         if (direction === TwoDDir.FW) {
             d = Dir.CW;
         } else if (direction === TwoDDir.BW) {
