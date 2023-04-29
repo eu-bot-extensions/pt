@@ -11,8 +11,8 @@
 /**
  *This is library uses the code from 
  */
-//% weight=10 color=#DF6721 icon="\uf11b" block="Eu Rate sensors library"
-namespace sensors {
+//% weight=10 color=#DF6721 icon="\uf11b" block="Eu Rate library"
+namespace eurate {
     const PCA9685_ADDRESS = 0x40
     const MODE1 = 0x00
     const MODE2 = 0x01
@@ -96,6 +96,16 @@ namespace sensors {
         CW = 1,
         //% blockId="CCW" block="CCW"
         CCW = -1,
+    }
+
+    /**
+     * The user defines the straight line direction.
+     */
+    export enum TwoDDir {
+        //% blockId="FW" block="FW"
+        FW = 1,
+        //% blockId="BW" block="BW"
+        BW = -1,
     }
 
     enum PingUnit {
@@ -622,4 +632,53 @@ namespace sensors {
             default: return d;
         }
     }
+
+        /**
+    * Rotate the robot in a specified direction for a certain duration (in microseconds) with a defined speed
+    * @param speed speed
+    * @param direction direction 
+    * @param duration duration in microseconds
+    */
+    //% blockId=motor_RobotRotate block="Robot Rotate |speed %speed|direction %Dir|duration %duration"
+    export function Rotate(speed: number, direction: Dir, duration: number): void {
+        motorStopAll();
+        if (direction === Dir.CW) {
+            MotorRun(1, -1, speed); //Right Back
+            MotorRun(2, 1, speed); //Left Back
+            MotorRun(3, -1, speed); // Right Front
+            MotorRun(4, 1, speed); // Left Front
+            control.waitMicros(duration);
+            motorStopAll();
+        } else if (direction === Dir.CCW) {
+            MotorRun(1, 1, speed); //Right Back
+            MotorRun(2, -1, speed); //Left Back
+            MotorRun(3, 1, speed); // Right Front
+            MotorRun(4, -1, speed); // Left Front
+            control.waitMicros(duration);
+            motorStopAll();
+        }
+    }
+
+    /**
+    * Move the robot in a specified direction on a straigh line for a certain duration (in microseconds) with a defined speed
+    * @param speed speed
+    * @param direction direction 
+    * @param duration duration in microseconds
+    */
+    //% blockId=motor_RobotMove block="Robot Move |speed %speed|direction %Dir|duration %duration"
+    export function Move(speed: number, direction: TwoDDir, duration: number): void {
+        motorStopAll();
+        var d;
+        if (direction === TwoDDir.FW)
+            d = Dir.CW;
+        else (direction === TwoDDir.BW)
+            d = Dir.CCW;
+        MotorRun(1, d, speed); //Right Back
+        MotorRun(2, d, speed); //Left Back
+        MotorRun(3, d, speed); // Right Front
+        MotorRun(4, d, speed); // Left Front
+        control.waitMicros(duration);
+        motorStopAll();
+    }
+
 }
