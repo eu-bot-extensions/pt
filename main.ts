@@ -65,6 +65,13 @@ namespace eurate {
     }
 
     /**
+     * The enum for boolean choices
+     */
+    export enum Choices {
+        Yes = 1,
+        No = -1
+    }
+    /**
      * The user can select the 8 steering gear controller.
      */
     export enum Servos {
@@ -668,11 +675,7 @@ namespace eurate {
     //% blockId=motor_RobotMove block="Robot Move |speed %speed|direction %Dir|duration %duration"
     export function Move(speed: number, direction: TwoDDir, duration: number, maxVelocity = 255, minVelocity = 1): void {
         motorStopAll();
-        if (speed<minVelocity) {
-            speed = minVelocity;
-        } else if (speed>maxVelocity) {
-            speed = maxVelocity;
-        }
+        if (speed < minVelocity) { speed = minVelocity; } else if (speed > maxVelocity) { speed = maxVelocity; } //check boundries
         let d;
         if (direction === TwoDDir.FW) {
             d = Dir.CW;
@@ -686,6 +689,38 @@ namespace eurate {
         MotorRun(4, d, speed); // Left Front
         control.waitMicros(duration);
         motorStopAll();
+    }
+
+    /**
+    * Return true if the IR Sensor find something inside a range
+    * @param pin the pin for the sensor
+    * @param range range
+    */
+    //% blockId=ir_sensor block="IR Sensor |pin %pin|range in cm %range between 1~30 cm|show value %choice ?"
+    export function irSensor(pin: AnalogPin, range: number, choice: Choices, maxRange = 30, minRange = 1) : boolean {
+        if (range<minRange) {range = minRange;} else if (range>maxRange) {range = maxRange;} //check boundries
+        let rangeInScale = (range*1023)/30;
+        if (choice === 1) {basic.showNumber(pins.analogReadPin(pin))}
+        if (rangeInScale < pins.analogReadPin(pin)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+    * Set high the specified digital pin if the sensor find something in range 
+    * @param pinInput the pin for the sensor
+    * @param pinOutput the pin for the sensor
+    * @param range range
+    */
+    //% blockId=ir_sensor_trigger block="IR Sensor trigger |pin sensor %pinInput|pin output %pinOutput|range in cm %range between 1~30 cm"
+    export function irSensorTrigger(pinInput: AnalogPin, pinOutput: DigitalPin, range: number): void {
+        if (irSensor(pinInput, range, Choices.No, 30, 1)){
+            pins.digitalWritePin(pinOutput, 1);
+        } else {
+            pins.digitalWritePin(pinOutput, 0);
+        }
     }
 
 }
