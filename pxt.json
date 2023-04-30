@@ -1,6 +1,6 @@
 {
     "name": "pxt-eu-rate",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "MakeCode extension",
     "license": "MIT",
     "dependencies": {
