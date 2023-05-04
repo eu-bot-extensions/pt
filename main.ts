@@ -534,7 +534,7 @@ namespace eurate {
     /**
      * Stop all motors
     */
-    //% weight=10
+    //% weight=100
     //% blockId=motor_motorStopAll block="Motor Stop All"
     export function motorStopAll(): void {
         for (let idx = 1; idx <= 4; idx++) {
@@ -559,7 +559,7 @@ namespace eurate {
     * Rotate Right
     * MotorRun(index: Motors, direction: Dir, speed: number):
     */
-    //% weight=10
+    //% weight=100
     //% blockId=motor_RobotRotateRight block="Robot Rotate Right|%speed"
     export function RotateRight(speed: number): void {
         motorStopAll();
@@ -574,7 +574,7 @@ namespace eurate {
     * Rotate Left
     * MotorRun(index: Motors, direction: Dir, speed: number):
     */
-    //% weight=10
+    //% weight=100
     //% blockId=motor_RobotRotateLeft block="Robot Rotate Left|%speed"
     export function RotateLeft(speed: number): void {
         motorStopAll();
@@ -620,6 +620,7 @@ namespace eurate {
     * @param unit desired conversion unit
     * @param maxCmDistance maximum distance in centimeters (default is 500)
     */
+    //% weight=100
     //% blockId=us_sensor block="US Sensor trig %trig|echo %echo|unit %unit"
     export function ping(trig: DigitalPin, echo: DigitalPin, unit: PingUnit, maxCmDistance = 500): number {
         // send pulse
@@ -646,6 +647,7 @@ namespace eurate {
     * @param direction direction 
     * @param duration duration in microseconds
     */
+    //% weight=100
     //% blockId=motor_RobotRotate block="Robot Rotate |speed %speed|direction %Dir|duration %duration"
     export function Rotate(speed: number, direction: Dir, duration: number): void {
         motorStopAll();
@@ -672,6 +674,7 @@ namespace eurate {
     * @param direction direction 
     * @param duration duration in microseconds
     */
+    //% weight=100
     //% blockId=motor_RobotMove block="Robot Move |speed %speed|direction %Dir|duration %duration"
     export function Move(speed: number, direction: TwoDDir, duration: number, maxVelocity = 255, minVelocity = 1): void {
         motorStopAll();
@@ -696,6 +699,7 @@ namespace eurate {
     * @param pin the pin for the sensor
     * @param range range
     */
+    //% weight=100
     //% blockId=ir_sensor block="IR Sensor |pin %pin|range in cm %range between 1~30 cm|show value %choice ?"
     export function irSensor(pin: AnalogPin, range: number, choice: Choices, maxRange = 30, minRange = 1) : boolean {
         if (range<minRange) {range = minRange;} else if (range>maxRange) {range = maxRange;} //check boundries
@@ -723,4 +727,42 @@ namespace eurate {
         }
     }
 
+    interface InterfaceSensorRange {
+        sensor: AnalogPin;
+        threshold: number;
+    }
+
+    class ClassSensorRange implements InterfaceSensorRange {
+        public sensor: AnalogPin = AnalogPin.P5;
+        public threshold: number = 1;
+
+        public build(sensorValue: AnalogPin, thresholdValue:number) {
+            this.sensor = sensorValue;
+            this.threshold = thresholdValue;
+        }
+
+        public findsSomethingInRange(registeredValue : number) : boolean{
+            let rangeInScale = (registeredValue * 1023) / 30;
+            let thresholdInScale = (this.threshold * 1023) / 30;
+            if (rangeInScale<thresholdInScale)
+                return true;
+                else return false;
+        }
+
+        public get Sensor() {
+            return this.sensor;
+        }
+
+        public get Threshold() {
+            return this.threshold;
+        }
+
+        public set Sensor(value) {
+            this.sensor = value;
+        }
+
+        public set Threshold(value) {
+            this.threshold = value;
+        }
+    }
 }
