@@ -615,23 +615,6 @@ namespace eurate {
     }
 
     /**
-    * Return the value of distance in cm
-    * @param trig tigger pin
-    * @param echo echo pin
-    */
-    //% weight=100
-    //% blockId=sonar_ping block="ping trig %trigpin|echo %echopin"
-    export function UsSensor(trigpin:DigitalPin, echopin: DigitalPin) : number
-    {
-        pins.digitalWritePin(trigpin, 0)
-        control.waitMicros(2)
-        pins.digitalWritePin(trigpin, 1)
-        control.waitMicros(10)
-        pins.digitalWritePin(trigpin, 0)
-        return Math.idiv(pins.pulseIn(echopin, PulseValue.High), 58)
-    }
-
-    /**
     * Send a ping and get the echo time (in microseconds) as a result
     * @param trig tigger pin
     * @param echo echo pin
@@ -713,21 +696,34 @@ namespace eurate {
     }
 
     /**
+    * Return the value of distance in cm
+    * @param trigpin tigger pin
+    * @param echopin echo pin
+    */
+    //% inlineInputMode=external
+    //% weight=100
+    //% blockId=us_sensor block="US Sensor |ping trig %trigpin|echo %echopin"
+    export function UsSensor(trigpin: DigitalPin, echopin: DigitalPin): number {
+        pins.digitalWritePin(trigpin, 0)
+        control.waitMicros(2)
+        pins.digitalWritePin(trigpin, 1)
+        control.waitMicros(10)
+        pins.digitalWritePin(trigpin, 0)
+        return Math.idiv(pins.pulseIn(echopin, PulseValue.High), 58)
+    }
+
+    /**
     * Return true if the IR Sensor find something inside a range
     * @param pin the pin for the sensor
     * @param range range
     */
+    //% inlineInputMode=external
     //% weight=100
-    //% blockId=ir_sensor block="IR Sensor |pin %pin|range in cm %range between 1~30 cm|show value %choice ?"
-    export function irSensor(pin: AnalogPin, range: number, choice: Choices, maxRange = 30, minRange = 1) : boolean {
+    //% blockId=ir_sensor block="IR Sensor |pin %pin|range in cm %range"
+    export function irSensor(pin: AnalogPin, range: number, maxRange = 30, minRange = 1) : number {
         if (range<minRange) {range = minRange;} else if (range>maxRange) {range = maxRange;} //check boundries
         let rangeInScale = (range*1023)/30;
-        if (choice === 1) {basic.showNumber(pins.analogReadPin(pin))}
-        if (rangeInScale < pins.analogReadPin(pin)) {
-            return true;
-        } else {
-            return false;
-        }
+        return rangeInScale
     }
 
     /**
@@ -736,9 +732,11 @@ namespace eurate {
     * @param pinOutput the pin for the sensor
     * @param range range
     */
-    //% blockId=ir_sensor_trigger block="IR Sensor trigger |pin sensor %pinInput|pin output %pinOutput|range in cm %range between 1~30 cm"
+    //% inlineInputMode=external
+    //% blockId=ir_sensor_trigger 
+    //% block="IR Sensor trigger |pin sensor %pinInput|pin output %pinOutput|range in cm %range between 1~30 cm"
     export function irSensorTrigger(pinInput: AnalogPin, pinOutput: DigitalPin, range: number): void {
-        if (irSensor(pinInput, range, Choices.No, 30, 1)){
+        if (irSensor(pinInput, range, 30, 1)){
             pins.digitalWritePin(pinOutput, 1);
         } else {
             pins.digitalWritePin(pinOutput, 0);
