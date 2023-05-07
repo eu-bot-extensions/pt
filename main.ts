@@ -1,12 +1,3 @@
-enum PingUnit {
-    //% block="μs"
-    MicroSeconds,
-    //% block="cm"
-    Centimeters,
-    //% block="inches"
-    Inches
-}
-
 /*！
  * @file pxt-eu-rate/main.ts
  * @brief EuRate microbit motors and sensors makecode library.
@@ -18,7 +9,7 @@ enum PingUnit {
  * @version  V0.0.1
  */
 /**
- *This is library uses the code from 
+ *EuRate Makecode extension
  */
 //% weight=10 color=#DF6721 icon="\uf11b" block="Eu Rate library"
 namespace eurate {
@@ -80,6 +71,16 @@ namespace eurate {
         Yes = 1,
         No = -1
     }
+
+    export enum PingUnit {
+        //% block="μs"
+        MicroSeconds,
+        //% block="cm"
+        Centimeters,
+        //% block="inches"
+        Inches
+    }
+
     /**
      * The user can select the 8 steering gear controller.
      */
