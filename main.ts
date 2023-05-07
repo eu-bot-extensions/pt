@@ -617,12 +617,12 @@ namespace eurate {
     * Send a ping and get the echo time (in microseconds) as a result
     * @param trig tigger pin
     * @param echo echo pin
-    * @param unit desired conversion unit
+    * @param pingunit desired conversion unit
     * @param maxCmDistance maximum distance in centimeters (default is 500)
     */
     //% weight=100
-    //% blockId=us_sensor block="US Sensor trig %trig|echo %echo|unit %unit"
-    export function ping(trig: DigitalPin, echo: DigitalPin, unit: PingUnit, maxCmDistance = 500): number {
+    //% blockId=us_sensor block="US Sensor trig %trig|echo %echo|unit %pingunit"
+    export function ping(trig: DigitalPin, echo: DigitalPin, pingunit: PingUnit, maxCmDistance = 500): number {
         // send pulse
         pins.setPull(trig, PinPullMode.PullNone);
         pins.digitalWritePin(trig, 0);
@@ -634,7 +634,7 @@ namespace eurate {
         // read pulse
         const d = pins.pulseIn(echo, PulseValue.High, maxCmDistance * 58);
 
-        switch (unit) {
+        switch (pingunit) {
             case PingUnit.Centimeters: return Math.idiv(d, 58);
             case PingUnit.Inches: return Math.idiv(d, 148);
             default: return d;
