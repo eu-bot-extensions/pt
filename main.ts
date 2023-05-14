@@ -713,34 +713,27 @@ namespace eurate {
     }
 
     /**
-    * Return true if the IR Sensor find something inside a range
+    * Return true if the sensor detects something
     * @param pin the pin for the sensor
-    * @param range range
     */
     //% inlineInputMode=external
     //% weight=100
-    //% blockId=ir_sensor block="IR Sensor |pin %pin|range in cm %range"
-    export function irSensor(pin: AnalogPin, range: number, maxRange = 30, minRange = 1) : number {
-        if (range<minRange) {range = minRange;} else if (range>maxRange) {range = maxRange;} //check boundries
-        let rangeInScale = (range*1023)/30;
-        return rangeInScale
+    //% blockId=ir_sensor_boolean block="IR Sensor |pin %pin"
+    export function IrSensor(pin: DigitalPin) : boolean {
+       let value = pins.digitalReadPin(pin)
+       return value == 1;
     }
 
     /**
-    * Set high the specified digital pin if the sensor find something in range 
-    * @param pinInput the pin for the sensor
-    * @param pinOutput the pin for the sensor
-    * @param range range
+    * Return 1 or 0 if the sensor detects something
+    * @param pin the pin for the sensor
     */
     //% inlineInputMode=external
-    //% blockId=ir_sensor_trigger 
-    //% block="IR Sensor trigger |pin sensor %pinInput|pin output %pinOutput|range in cm %range between 1~30 cm"
-    export function irSensorTrigger(pinInput: AnalogPin, pinOutput: DigitalPin, range: number): void {
-        if (irSensor(pinInput, range, 30, 1)){
-            pins.digitalWritePin(pinOutput, 1);
-        } else {
-            pins.digitalWritePin(pinOutput, 0);
-        }
+    //% weight=95
+    //% blockId=ir_sensor_dvalue block="IR Sensor Digital Value |pin %pin"
+    export function IrSensorDigital(pin: DigitalPin): number {
+        let value = pins.digitalReadPin(pin)
+        return value;
     }
 
     interface InterfaceSensorRange {
@@ -779,6 +772,79 @@ namespace eurate {
 
         public set Threshold(value) {
             this.threshold = value;
+        }
+    }
+
+    /**
+    * The robot moves forward until it encounters an obstacle in front and then turns right until it has space to go forward again (Based on the "Right-hand" rule for labyrinths)
+    * @param trigpin the trig pin for the us sensor
+    * @param echopin the echo pin for the us sensor
+    * @param speed the speed of the motors
+    * @param distance the threshold distance with which the robot is meant to turn
+    */
+    //% inlineInputMode=external
+    //% weight=100
+    //% blockId= simple_labyrinth_navigator_us
+    //% block="Simple labyrinth navigator with US sensor|trigpin us %trigpin|echopin us %echopin|motors speed  %speed|threshold in cm us  %distance"
+    export function SimpleLabNavUS(trigpin: DigitalPin, echopin: DigitalPin, speed: number, distance: number): void {
+        let us = eurate.UsSensor(
+            trigpin,
+            echopin
+        )
+        if (us <= distance) {
+            eurate.MotorRun(eurate.Motors.M2, eurate.Dir.CW, speed)
+            eurate.MotorRun(eurate.Motors.M4, eurate.Dir.CW, speed)
+            eurate.MotorRun(eurate.Motors.M1, eurate.Dir.CCW, speed)
+            eurate.MotorRun(eurate.Motors.M3, eurate.Dir.CCW, speed)
+            control.waitMicros(1000)
+        } else {
+            eurate.MotorRun(eurate.Motors.M1, eurate.Dir.CW, speed)
+            eurate.MotorRun(eurate.Motors.M2, eurate.Dir.CW, speed)
+            eurate.MotorRun(eurate.Motors.M3, eurate.Dir.CW, speed)
+            eurate.MotorRun(eurate.Motors.M4, eurate.Dir.CW, speed)
+        }
+    }
+
+    /**
+    * Set high the specified digital pin if the sensor finds something 
+    * @param pinInput the pin for the sensor
+    * @param pinOutput the pin for the sensor
+    */
+    //% inlineInputMode=external
+    //% blockId=ir_sensor_trigger 
+    //% block="IR Sensor trigger |pin sensor %pinInput|pin output %pinOutput"
+    export function irSensorTrigger(pinInput: DigitalPin, pinOutput: DigitalPin) : void {
+        if (eurate.IrSensor(pinInput)) {
+            pins.digitalWritePin(pinOutput, 1);
+        } else {
+            pins.digitalWritePin(pinOutput, 0);
+        }
+    }
+
+    /**
+    * The robot moves forward until it encounters an obstacle in front and then turns right until it has space to go forward again (Based on the "Right-hand" rule for labyrinths)
+    * @param sensorpin the pin for the ir sensor
+    * @param speed the speed of the Motors
+    */
+    //% inlineInputMode=external
+    //% weight=100
+    //% blockId= simple_labyrinth_navigator_ir
+    //% block="Simple labyrinth navigator with IR sensor|pin ir %sensorpin|motors speed  %speed"
+    export function SimpleLabNavIR(sensorpin: DigitalPin, speed: number): void {
+        let ir = eurate.IrSensor(
+            sensorpin
+        )
+        if (ir) {
+            eurate.MotorRun(eurate.Motors.M2, eurate.Dir.CW, speed)
+            eurate.MotorRun(eurate.Motors.M4, eurate.Dir.CW, speed)
+            eurate.MotorRun(eurate.Motors.M1, eurate.Dir.CCW, speed)
+            eurate.MotorRun(eurate.Motors.M3, eurate.Dir.CCW, speed)
+            control.waitMicros(1000)
+        } else {
+            eurate.MotorRun(eurate.Motors.M1, eurate.Dir.CW, speed)
+            eurate.MotorRun(eurate.Motors.M2, eurate.Dir.CW, speed)
+            eurate.MotorRun(eurate.Motors.M3, eurate.Dir.CW, speed)
+            eurate.MotorRun(eurate.Motors.M4, eurate.Dir.CW, speed)
         }
     }
 }
