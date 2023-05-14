@@ -776,7 +776,7 @@ namespace eurate {
     }
 
     /**
-    * The robot moves forward until it encounters an obstacle in front and then turns right until it has space to go forward again (Based on the "Right-hand" rule for labyrinths)
+    * The robot moves forward until it encounters an obstacle in front and then turns right until it has space to go forward again 
     * @param trigpin the trig pin for the us sensor
     * @param echopin the echo pin for the us sensor
     * @param speed the speed of the motors
@@ -822,7 +822,7 @@ namespace eurate {
     }
 
     /**
-    * The robot moves forward until it encounters an obstacle in front and then turns right until it has space to go forward again (Based on the "Right-hand" rule for labyrinths)
+    * The robot moves forward until it encounters an obstacle in front and then turns right until it has space to go forward again 
     * @param sensorpin the pin for the ir sensor
     * @param speed the speed of the Motors
     */
