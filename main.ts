@@ -675,7 +675,7 @@ namespace eurate {
     * @param direction direction 
     * @param duration duration in microseconds
     */
-    //% weight=100
+    //% weight=90
     //% blockId=motor_RobotMove block="Robot Move |speed %speed|direction %Dir|duration %duration"
     export function Move(speed: number, direction: TwoDDir, duration: number, maxVelocity = 255, minVelocity = 1): void {
         motorStopAll();
