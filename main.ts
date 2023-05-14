@@ -721,7 +721,7 @@ namespace eurate {
     //% blockId=ir_sensor_boolean block="IR Sensor |pin %pin"
     export function IrSensor(pin: DigitalPin) : boolean {
        let value = pins.digitalReadPin(pin)
-       return value == 1;
+       return value == 0;
     }
 
     /**
@@ -783,9 +783,9 @@ namespace eurate {
     * @param distance the threshold distance with which the robot is meant to turn
     */
     //% inlineInputMode=external
-    //% weight=100
+    //% weight=1
     //% blockId= simple_labyrinth_navigator_us
-    //% block="Simple labyrinth navigator with US sensor|trigpin us %trigpin|echopin us %echopin|motors speed  %speed|threshold in cm us  %distance"
+    //% block="Turn right if in front of a wall with US sensor|trigpin us %trigpin|echopin us %echopin|motors speed  %speed|threshold in cm us  %distance"
     export function SimpleLabNavUS(trigpin: DigitalPin, echopin: DigitalPin, speed: number, distance: number): void {
         let us = eurate.UsSensor(
             trigpin,
@@ -827,9 +827,9 @@ namespace eurate {
     * @param speed the speed of the Motors
     */
     //% inlineInputMode=external
-    //% weight=100
+    //% weight=1
     //% blockId= simple_labyrinth_navigator_ir
-    //% block="Simple labyrinth navigator with IR sensor|pin ir %sensorpin|motors speed  %speed"
+    //% block="Turn right if in front of a wall with IR sensor|pin ir %sensorpin|motors speed  %speed"
     export function SimpleLabNavIR(sensorpin: DigitalPin, speed: number): void {
         let ir = eurate.IrSensor(
             sensorpin
@@ -847,4 +847,6 @@ namespace eurate {
             eurate.MotorRun(eurate.Motors.M4, eurate.Dir.CW, speed)
         }
     }
+
+ 
 }
