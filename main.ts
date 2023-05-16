@@ -586,35 +586,6 @@ namespace eurate {
     }
 
     /**
-    * Turn Right
-    * MotorRun(index: Motors, direction: Dir, speed: number):
-    */
-    //% weight=10
-    //% blockId=motor_RobotTurnRight block="Robot Turn Right|%speed"
-    export function TurnRight(speed: number): void {
-        motorStopAll();
-        MotorRun(1, -1, 0); //Right Back
-        MotorRun(2, -1, speed); //Left Back
-        MotorRun(3, -1, speed / 4); // Right Front
-        MotorRun(4, -1, speed); // Left Front
-
-    }
-
-    /**
-    * Turn Left
-    * MotorRun(index: Motors, direction: Dir, speed: number):
-    */
-    //% weight=10
-    //% blockId=motor_RobotTurnLeft block="Robot Turn Left|%speed"
-    export function TurnLeft(speed: number): void {
-        motorStopAll();
-        MotorRun(1, -1, speed); //Right Back
-        MotorRun(2, -1, 0); //Left Back
-        MotorRun(3, -1, speed); // Right Front
-        MotorRun(4, -1, speed / 4); // Left Front
-    }
-
-    /**
     * Send a ping and get the echo time (in microseconds) as a result
     * @param trig tigger pin
     * @param echo echo pin
@@ -639,33 +610,6 @@ namespace eurate {
             case PingUnit.Centimeters: return Math.idiv(d, 58);
             case PingUnit.Inches: return Math.idiv(d, 148);
             default: return d;
-        }
-    }
-
-        /**
-    * Rotate the robot in a specified direction for a certain duration (in microseconds) with a defined speed
-    * @param speed speed
-    * @param direction direction 
-    * @param duration duration in microseconds
-    */
-    //% weight=100
-    //% blockId=motor_RobotRotate block="Robot Rotate |speed %speed|direction %Dir|duration %duration"
-    export function Rotate(speed: number, direction: Dir, duration: number): void {
-        motorStopAll();
-        if (direction === Dir.CW) {
-            MotorRun(1, -1, speed); //Right Back
-            MotorRun(2, 1, speed); //Left Back
-            MotorRun(3, -1, speed); // Right Front
-            MotorRun(4, 1, speed); // Left Front
-            basic.pause(duration);
-            motorStopAll();
-        } else if (direction === Dir.CCW) {
-            MotorRun(1, 1, speed); //Right Back
-            MotorRun(2, -1, speed); //Left Back
-            MotorRun(3, 1, speed); // Right Front
-            MotorRun(4, -1, speed); // Left Front
-            basic.pause(duration);
-            motorStopAll();
         }
     }
 
@@ -775,36 +719,7 @@ namespace eurate {
         }
     }
 
-    /**
-    * The robot moves forward until it encounters an obstacle in front and then turns right until it has space to go forward again 
-    * @param trigpin the trig pin for the us sensor
-    * @param echopin the echo pin for the us sensor
-    * @param speed the speed of the motors
-    * @param distance the threshold distance with which the robot is meant to turn
-    */
-    //% inlineInputMode=external
-    //% weight=1
-    //% blockId= simple_labyrinth_navigator_us
-    //% block="Turn right if in front of a wall with US sensor|trigpin us %trigpin|echopin us %echopin|motors speed  %speed|threshold in cm us  %distance"
-    export function SimpleLabNavUS(trigpin: DigitalPin, echopin: DigitalPin, speed: number, distance: number): void {
-        let us = eurate.UsSensor(
-            trigpin,
-            echopin
-        )
-        if (us <= distance) {
-            eurate.MotorRun(eurate.Motors.M2, eurate.Dir.CW, speed)
-            eurate.MotorRun(eurate.Motors.M4, eurate.Dir.CW, speed)
-            eurate.MotorRun(eurate.Motors.M1, eurate.Dir.CCW, speed)
-            eurate.MotorRun(eurate.Motors.M3, eurate.Dir.CCW, speed)
-            basic.pause(1000)
-        } else {
-            eurate.MotorRun(eurate.Motors.M1, eurate.Dir.CW, speed)
-            eurate.MotorRun(eurate.Motors.M2, eurate.Dir.CW, speed)
-            eurate.MotorRun(eurate.Motors.M3, eurate.Dir.CW, speed)
-            eurate.MotorRun(eurate.Motors.M4, eurate.Dir.CW, speed)
-        }
-    }
-
+  
     /**
     * Set high the specified digital pin if the sensor finds something 
     * @param pinInput the pin for the sensor
@@ -818,33 +733,6 @@ namespace eurate {
             pins.digitalWritePin(pinOutput, 1);
         } else {
             pins.digitalWritePin(pinOutput, 0);
-        }
-    }
-
-    /**
-    * The robot moves forward until it encounters an obstacle in front and then turns right until it has space to go forward again 
-    * @param sensorpin the pin for the ir sensor
-    * @param speed the speed of the Motors
-    */
-    //% inlineInputMode=external
-    //% weight=1
-    //% blockId= simple_labyrinth_navigator_ir
-    //% block="Turn right if in front of a wall with IR sensor|pin ir %sensorpin|motors speed  %speed"
-    export function SimpleLabNavIR(sensorpin: DigitalPin, speed: number): void {
-        let ir = eurate.IrSensor(
-            sensorpin
-        )
-        if (ir) {
-            eurate.MotorRun(eurate.Motors.M2, eurate.Dir.CW, speed)
-            eurate.MotorRun(eurate.Motors.M4, eurate.Dir.CW, speed)
-            eurate.MotorRun(eurate.Motors.M1, eurate.Dir.CCW, speed)
-            eurate.MotorRun(eurate.Motors.M3, eurate.Dir.CCW, speed)
-            basic.pause(1000)
-        } else {
-            eurate.MotorRun(eurate.Motors.M1, eurate.Dir.CW, speed)
-            eurate.MotorRun(eurate.Motors.M2, eurate.Dir.CW, speed)
-            eurate.MotorRun(eurate.Motors.M3, eurate.Dir.CW, speed)
-            eurate.MotorRun(eurate.Motors.M4, eurate.Dir.CW, speed)
         }
     }
 
@@ -865,7 +753,7 @@ namespace eurate {
     //% block="Labyrinth navigator with US sensor|trigpin us %trigpin|echopin us %echopin|angle range from front %angle|motors speed  %speed|threshold in cm from us  %distance|pin servo %servopin|seconds to turn %seconds|degree range to look around %rangeLA"
     export function LavNabUS(trigpin: DigitalPin, echopin: DigitalPin, angle: number, speed: number, distance: number, servopin: Servos, seconds: number, rangeLA:number) : void {
         
-        motorStopAll();
+        //motorStopAll();
         if (angle > 250) angle = 255;
         else if (angle < 0) angle = 0;
 
@@ -905,11 +793,15 @@ namespace eurate {
             
             lookAround(servopin, trigpin, echopin, speed, index, seconds, rangeLA)
         } else {
-            eurate.MotorRun(eurate.Motors.M1, eurate.Dir.CW, speed)
-            eurate.MotorRun(eurate.Motors.M2, eurate.Dir.CW, speed)
-            eurate.MotorRun(eurate.Motors.M3, eurate.Dir.CW, speed)
-            eurate.MotorRun(eurate.Motors.M4, eurate.Dir.CW, speed)
+            Forward(speed);
         }
+    }
+
+    function Forward(speed: number): void {
+        eurate.MotorRun(eurate.Motors.M1, eurate.Dir.CW, speed)
+        eurate.MotorRun(eurate.Motors.M2, eurate.Dir.CW, speed)
+        eurate.MotorRun(eurate.Motors.M3, eurate.Dir.CW, speed)
+        eurate.MotorRun(eurate.Motors.M4, eurate.Dir.CW, speed)
     }
 
     function lookAround(servopin: Servos, 
@@ -923,9 +815,9 @@ namespace eurate {
         let right = lookRight(servopin, trigpin, echopin, index, rangeLA)
 
         if (left > right) {
-            TurnLeftRobot(speed, seconds)
+            TurnLeftRobotForSeconds(speed, seconds)
         } else if (right > left) {
-            TurnRightRobot(speed, seconds)
+            TurnLeftRobotForSeconds(speed, seconds)
         } else if (right==left) {
             BackUp(speed, seconds);
         }
@@ -940,19 +832,27 @@ namespace eurate {
         basic.pause(seconds * 1000);
     }
 
-    function TurnRightRobot(speed: number, seconds: number): void {
+    function TurnRightRobot(speed: number): void {
         eurate.MotorRun(eurate.Motors.M1, eurate.Dir.CCW, speed)
         eurate.MotorRun(eurate.Motors.M2, eurate.Dir.CW, speed)
         eurate.MotorRun(eurate.Motors.M3, eurate.Dir.CCW, speed)
         eurate.MotorRun(eurate.Motors.M4, eurate.Dir.CW, speed)
-        basic.pause(seconds*1000);
     }
 
-    function TurnLeftRobot(speed: number, seconds: number) : void {
+    function TurnRightRobotForSeconds(speed: number, seconds: number): void {
+        TurnRightRobot(speed)
+        basic.pause(seconds * 1000);
+    }
+
+    function TurnLeftRobot(speed: number) : void {
         eurate.MotorRun(eurate.Motors.M1, eurate.Dir.CW, speed)
         eurate.MotorRun(eurate.Motors.M2, eurate.Dir.CCW, speed)
         eurate.MotorRun(eurate.Motors.M3, eurate.Dir.CW, speed)
         eurate.MotorRun(eurate.Motors.M4, eurate.Dir.CCW, speed)
+    }
+
+    function TurnLeftRobotForSeconds(speed: number, seconds: number): void {
+        TurnLeftRobot(speed)
         basic.pause(seconds * 1000);
     }
 
@@ -1017,9 +917,46 @@ namespace eurate {
     //% block="Turn robot|motors speed  %speed|seconds %seconds|direction %direction"
     export function Turn(speed: number, seconds: number, direction: DirRot): void {
         if (direction == DirRot.Right) {
-            TurnRightRobot(speed, seconds)
+            TurnRightRobotForSeconds(speed, seconds)
         } else if (direction == DirRot.Left) {
-            TurnLeftRobot(speed, seconds)
+            TurnLeftRobotForSeconds(speed, seconds)
+        }
+    }
+
+    /**
+    * Follows a line based on the results of the two ir sensors
+    * @param pinleft the pin for the left sensor
+    * @param pinright the pin for the right sensor
+    * @param speed the speed for the motors
+    * @param ms the number of milliseconds to wait after starting the motors
+    */
+    //% inlineInputMode=external
+    //% weight=100
+    //% blockId= line_follower
+    //% block="Line follower with two ir sensors|left ir sensor  %pinleft|right ir sensor %pinright|speed  %speed|value of mS to move motors  %ms"
+    export function LineFollower(pinleft: DigitalPin, pinright: DigitalPin, speed: number, ms:number): void {
+
+        let right = eurate.IrSensor(pinright);
+        let left = eurate.IrSensor(pinleft)
+
+        if (left && right) {
+            basic.showArrow(ArrowNames.North)
+            Forward(speed)
+            basic.pause(ms)
+            motorStopAll()
+        } else if (right && !left) {
+            basic.showArrow(ArrowNames.East)
+            TurnLeftRobot(speed)
+            basic.pause(ms)
+            motorStopAll()
+        } else if (!right && left) {
+            basic.showArrow(ArrowNames.West)
+            TurnRightRobot(speed)
+            basic.pause(ms)
+            motorStopAll()
+        } else if (!right && !left) {
+            basic.showIcon(IconNames.No)
+            motorStopAll();
         }
     }
 
