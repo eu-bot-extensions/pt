@@ -750,7 +750,7 @@ namespace eurate {
     //% inlineInputMode=external
     //% weight=100
     //% blockId= labyrinth_navigator_us
-    //% block="Labyrinth navigator with US sensor|trigpin us %trigpin|echopin us %echopin|angle range from front %angle|motors speed  %speed|threshold in cm from us  %distance|pin servo %servopin|seconds to turn %seconds|degree range to look around %rangeLA"
+    //% block="Labyrinth navigator with US sensor|trigpin US %trigpin|echopin US %echopin|angle range front US %angle|motors speed  %speed|threshold in cm from US  %distance|pin servo %servopin|seconds to turn %seconds|degree range to look around %rangeLA"
     export function LavNabUS(trigpin: DigitalPin, echopin: DigitalPin, angle: number, speed: number, distance: number, servopin: Servos, seconds: number, rangeLA:number) : void {
         
         //motorStopAll();
