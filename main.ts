@@ -657,14 +657,14 @@ namespace eurate {
             MotorRun(2, 1, speed); //Left Back
             MotorRun(3, -1, speed); // Right Front
             MotorRun(4, 1, speed); // Left Front
-            control.waitMicros(duration);
+            basic.pause(duration);
             motorStopAll();
         } else if (direction === Dir.CCW) {
             MotorRun(1, 1, speed); //Right Back
             MotorRun(2, -1, speed); //Left Back
             MotorRun(3, 1, speed); // Right Front
             MotorRun(4, -1, speed); // Left Front
-            control.waitMicros(duration);
+            basic.pause(duration);
             motorStopAll();
         }
     }
@@ -691,7 +691,7 @@ namespace eurate {
         MotorRun(2, d, speed); //Left Back
         MotorRun(3, d, speed); // Right Front
         MotorRun(4, d, speed); // Left Front
-        control.waitMicros(duration);
+        basic.pause(duration);
         motorStopAll();
     }
 
@@ -796,7 +796,7 @@ namespace eurate {
             eurate.MotorRun(eurate.Motors.M4, eurate.Dir.CW, speed)
             eurate.MotorRun(eurate.Motors.M1, eurate.Dir.CCW, speed)
             eurate.MotorRun(eurate.Motors.M3, eurate.Dir.CCW, speed)
-            control.waitMicros(1000)
+            basic.pause(1000)
         } else {
             eurate.MotorRun(eurate.Motors.M1, eurate.Dir.CW, speed)
             eurate.MotorRun(eurate.Motors.M2, eurate.Dir.CW, speed)
@@ -839,7 +839,7 @@ namespace eurate {
             eurate.MotorRun(eurate.Motors.M4, eurate.Dir.CW, speed)
             eurate.MotorRun(eurate.Motors.M1, eurate.Dir.CCW, speed)
             eurate.MotorRun(eurate.Motors.M3, eurate.Dir.CCW, speed)
-            control.waitMicros(1000)
+            basic.pause(1000)
         } else {
             eurate.MotorRun(eurate.Motors.M1, eurate.Dir.CW, speed)
             eurate.MotorRun(eurate.Motors.M2, eurate.Dir.CW, speed)
@@ -848,5 +848,126 @@ namespace eurate {
         }
     }
 
- 
+    /**
+   * The robot moves forward until it encounters an wall in front and then turns in the direction with the most free space available 
+   * @param trigpin the trig pin for the us sensor
+   * @param echopin the echo pin for the us sensor
+   * @param speed the speed of the motors
+   * @param distance the threshold distance with which the robot is meant to turn
+   * @param servopin the pin of the servomotor
+   */
+    //% inlineInputMode=external
+    //% weight=100
+    //% blockId= labyrinth_navigator_us
+    //% block="Labyrinth navigator with US sensor|trigpin us %trigpin|echopin us %echopin|motors speed  %speed|threshold in cm us  %distance|pin servo %servopin"
+    export function LavNabUS(trigpin: DigitalPin, echopin: DigitalPin, speed: number, distance: number, servopin:Servos): void {
+        
+        let frontangle = 20;
+        let max = 90 + frontangle/2;
+        let min = 90 - frontangle/2;
+
+        let index = min;
+        if (index == min) {
+            while (index < max) {
+                eurate.servo(servopin, index)
+                index++;
+            }
+        } else if ((index == max)) {
+            while (index > min) {
+                eurate.servo(servopin, index)
+                index--;
+            }
+        }
+        
+        let us = eurate.UsSensor(
+            trigpin,
+            echopin
+        )
+        if (us <= distance) {
+            motorStopAll();
+            index=90;
+            lookAround(servopin, trigpin, echopin, speed, index)
+        } else {
+            eurate.MotorRun(eurate.Motors.M1, eurate.Dir.CW, speed)
+            eurate.MotorRun(eurate.Motors.M2, eurate.Dir.CW, speed)
+            eurate.MotorRun(eurate.Motors.M3, eurate.Dir.CW, speed)
+            eurate.MotorRun(eurate.Motors.M4, eurate.Dir.CW, speed)
+        }
+    }
+
+    function lookAround(servopin: Servos, trigpin: DigitalPin, echopin: DigitalPin, speed: number, index: number) : void{
+        let left = lookLeft(servopin, trigpin, echopin, index);
+        let right = lookRight(servopin, trigpin, echopin, index)
+
+        if (left > right) {
+            TurnRightRobot(speed)
+        } else if (right > left) {
+            TurnLeftRobot(speed)
+        }
+        motorStopAll();
+    }
+
+    function TurnLeftRobot(speed: number): void {
+        for (let index = 0; index < speed * 3;index++) {
+            eurate.MotorRun(eurate.Motors.M1, eurate.Dir.CCW, speed)
+            eurate.MotorRun(eurate.Motors.M2, eurate.Dir.CW, speed)
+            eurate.MotorRun(eurate.Motors.M3, eurate.Dir.CCW, speed)
+            eurate.MotorRun(eurate.Motors.M4, eurate.Dir.CW, speed)
+        }
+    }
+
+    function TurnRightRobot(speed: number) : void {
+        for (let index = 0; index < speed * 3; index++) {
+            eurate.MotorRun(eurate.Motors.M1, eurate.Dir.CW, speed)
+            eurate.MotorRun(eurate.Motors.M2, eurate.Dir.CCW, speed)
+            eurate.MotorRun(eurate.Motors.M3, eurate.Dir.CW, speed)
+            eurate.MotorRun(eurate.Motors.M4, eurate.Dir.CCW, speed)
+        }
+    }
+
+    function lookLeft(servopin: Servos, trigpin: DigitalPin, echopin: DigitalPin, index: number) : number{
+        while (index > 0) {
+            eurate.servo(servopin, index)
+            basic.pause(10)
+            index--
+        }
+        basic.pause(500)
+        basic.showNumber(index)
+        let us = eurate.UsSensor(
+            trigpin,
+            echopin
+        )
+        while (index < 90) {
+            eurate.servo(servopin, index)
+            basic.pause(10)
+            index++
+        }
+        basic.pause(500)
+        basic.showNumber(index)
+        
+        return us
+    }
+
+    function lookRight(servopin: Servos, trigpin: DigitalPin, echopin: DigitalPin, index: number): number {
+        while (index < 180) {
+            eurate.servo(servopin, index)
+            basic.pause(10)
+            index++
+        } 
+        basic.pause(500)
+        basic.showNumber(index)
+        let us = eurate.UsSensor(
+            trigpin,
+            echopin
+        )
+        while (index > 90) {
+            eurate.servo(servopin, index)
+            basic.pause(10)
+            index--
+        } 
+        basic.pause(500)
+        basic.showNumber(index)
+        return us
+    }
+
 }
