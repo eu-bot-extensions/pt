@@ -960,5 +960,43 @@ namespace eurate {
         }
     }
 
+    /**
+    * Follows a line based on the results of three ir sensors
+    * @param pinleft the pin for the left sensor
+    * @param pinright the pin for the right sensor
+    * @param pincenter the pin for the center sensor
+    * @param speed the speed for the motors
+    * @param ms the number of milliseconds to wait after starting the motors
+    */
+    //% inlineInputMode=external
+    //% weight=100
+    //% blockId= line_follower_three_s
+    //% block="Line follower with three ir sensors|left ir sensor  %pinleft|right ir sensor %pinright|center ir sensor %pincenter|speed  %speed|value of mS to move motors  %ms"
+    export function LineFollowerThreeSensors(pinleft: DigitalPin, pinright: DigitalPin, pincenter: DigitalPin, speed: number, ms: number): void {
 
+        let leftV = eurate.IrSensor(pinleft);
+        let centerV = eurate.IrSensor(pincenter);
+        let rightV = eurate.IrSensor(pinright);
+
+        if (leftV  && !centerV && rightV ) {
+            Forward(speed);
+            basic.pause(ms)
+        } else if (!leftV  && !centerV && !rightV) {
+            motorStopAll();
+        } else if (leftV && centerV && rightV) {
+            motorStopAll();
+        } else if (!leftV && !centerV && rightV) {
+            TurnLeftRobot(speed);
+            basic.pause(ms)
+        } else if (leftV && !centerV && !rightV) {
+            TurnRightRobot(speed);
+            basic.pause(ms)
+        } else if (!leftV && centerV && rightV) {
+            TurnLeftRobot(speed);
+            basic.pause(ms)
+        } else if (leftV && centerV && !rightV) {
+            TurnRightRobot(speed);
+            basic.pause(ms)
+        }
+    }
 }
