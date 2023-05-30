@@ -969,7 +969,7 @@ namespace eurate {
     * @param ms the number of milliseconds to wait after starting the motors
     */
     //% inlineInputMode=external
-    //% weight=100
+    //% weight=70
     //% blockId= line_follower_three_s
     //% block="Line follower with three ir sensors|left ir sensor  %pinleft|right ir sensor %pinright|center ir sensor %pincenter|speed  %speed|value of mS to move motors  %ms"
     export function LineFollowerThreeSensors(pinleft: DigitalPin, pinright: DigitalPin, pincenter: DigitalPin, speed: number, ms: number): void {
