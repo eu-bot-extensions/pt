@@ -620,7 +620,7 @@ namespace eurate {
     * @param duration duration in microseconds
     */
     //% weight=90
-    //% blockId=motor_RobotMove block="Robot Move |speed %speed|direction %Dir|duration %duration"
+    //% blockId=motor_RobotMove block="Robot Move |speed %speed|direction %Dir|duration ms %duration"
     export function Move(speed: number, direction: TwoDDir, duration: number, maxVelocity = 255, minVelocity = 1): void {
         motorStopAll();
         if (speed < minVelocity) { speed = minVelocity; } else if (speed > maxVelocity) { speed = maxVelocity; } //check boundries
