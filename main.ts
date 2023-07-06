@@ -13,6 +13,7 @@
  */
 //% weight=10 color=#DF6721 icon="\uf11b" block="Eu Rate library"
 namespace eurate {
+
     const PCA9685_ADDRESS = 0x40
     const MODE1 = 0x00
     const MODE2 = 0x01
@@ -255,7 +256,6 @@ namespace eurate {
             }
         }
     }
-
 
     /**
      * Steering gear control function.
