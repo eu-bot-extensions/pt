@@ -662,7 +662,7 @@ namespace eurate {
     */
     //% inlineInputMode=external
     //% weight=100
-    //% blockId=ir_sensor_boolean block="IR Sensor |pin %pin"
+    //% blockId=ir_sensor_boolean block="IR Sensor |pin digital %pin"
     export function IrSensor(pin: DigitalPin) : boolean {
        let value = pins.digitalReadPin(pin)
        return value == 0;
