@@ -561,7 +561,7 @@ namespace eurate {
     * MotorRun(index: Motors, direction: Dir, speed: number):
     */
     //% weight=100
-    //% blockId=motor_RobotRotateRight block="Robot Rotate Right|%speed"
+    //% blockId=motor_RobotRotateRight block="Robot Rotate Right|speed %speed"
     export function RotateRight(speed: number): void {
         motorStopAll();
         MotorRun(1, -1, speed); //Right Back
@@ -576,7 +576,7 @@ namespace eurate {
     * MotorRun(index: Motors, direction: Dir, speed: number):
     */
     //% weight=100
-    //% blockId=motor_RobotRotateLeft block="Robot Rotate Left|%speed"
+    //% blockId=motor_RobotRotateLeft block="Robot Rotate Left|speed %speed"
     export function RotateLeft(speed: number): void {
         motorStopAll();
         MotorRun(1, 1, speed); //Right Back
