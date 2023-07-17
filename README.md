@@ -1,5 +1,5 @@
 
-> Open this page in [https://github.com/eu-bot-extensions/en/](https://github.com/eu-bot-extensions/en/
+> Open this page in [https://github.com/eu-bot-extensions/en/](https://github.com/eu-bot-extensions/en/)
 
 ## Use as extension
 
